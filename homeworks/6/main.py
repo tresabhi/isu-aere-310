@@ -6,27 +6,18 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import concurrent.futures
+from scipy.interpolate import interp1d
 
-"""
-got sick of jumping between workspaces so now just place airfoil.dat adjacent
-to this script :)
-"""
-airfoil_deg = np.loadtxt(
-    os.path.join(os.path.dirname(os.path.realpath(__file__)), "airfoil.dat")
-)
-airfoil = airfoil_deg.copy()
-airfoil[:, 0] = np.deg2rad(airfoil[:, 0])
-
-N = 10  # sections
-epsilon = 1e-10  # threshold
-beta = 1e-3  # damping
+N = 150  # sections
+epsilon = 1e-8  # threshold
+beta = 1e-2  # damping
 
 V_infinity = 65
 
 S = 17
 AR = 8
 lambda_ = 0.7
-b = (S * AR) ** (1 / 2)
+b = math.sqrt(S * AR)
 c_r = 2 * S / (b * (1 + lambda_))
 c_t = lambda_ * c_r
 
@@ -45,14 +36,23 @@ i_t = -1.5 * math.pi / 180
 delta_z = b / N
 
 
-def c_l(alpha):
-    for i in range(len(airfoil) - 1):
-        if airfoil[i][0] <= alpha <= airfoil[i + 1][0]:
-            x0, y0 = airfoil[i]
-            x1, y1 = airfoil[i + 1]
-            return y0 + (alpha - x0) * (y1 - y0) / (x1 - x0)
+"""
+got sick of jumping between workspaces so now just place airfoil.dat adjacent
+to this script :)
+"""
+airfoil_deg = np.loadtxt(
+    os.path.join(os.path.dirname(os.path.realpath(__file__)), "airfoil.dat")
+)
+airfoil = airfoil_deg.copy()
+airfoil[:, 0] = np.deg2rad(airfoil[:, 0])
 
-    return None
+c_l_interp = interp1d(
+    airfoil[:, 0], airfoil[:, 1], fill_value="extrapolate", kind="cubic"
+)
+
+
+def c_l(alpha):
+    return c_l_interp(alpha)
 
 
 def c(z):
@@ -80,10 +80,9 @@ def iterate(Gammas, alpha):
         alpha_eff_i = alpha + incidence(z_i) + alpha_i_i(Gammas, i)
 
         c_i = c(z_i)
-
         C_l_i = c_l(alpha_eff_i)
 
-        Gamma_new_i = V_infinity * c_i / 2 * C_l_i
+        Gamma_new_i = (V_infinity * c_i / 2) * C_l_i
         Gamma_old_i = Gammas[i - 1]
         Gamma = Gamma_old_i + beta * (Gamma_new_i - Gamma_old_i)
 
@@ -109,6 +108,8 @@ def Gamma_ephemeral(i):
 
 
 def converge(alpha):
+    print(f"🟡 Received request for alpha = {round(alpha * 180 / math.pi)}°")
+
     Gammas = [Gamma_ephemeral(i) for i in range(1, N + 1)]
     converged = False
     iteration = 0
@@ -129,7 +130,7 @@ def converge(alpha):
         iteration += 1
 
     print(
-        f"Converged alpha = {round(alpha * 180 / math.pi)}° in {iteration} iterations"
+        f"🟢 Converged alpha = {round(alpha * 180 / math.pi)}° in {iteration} iterations"
     )
 
     C_L = 2 * delta_z / (V_infinity * S) * sum(Gammas[i - 1] for i in range(1, N + 1))
@@ -170,11 +171,13 @@ def main():
     ax2.plot(alphas_deg, C_D_is, color="tab:red", label="C_D_i")
     ax2.set_ylabel("C_D_i", color="tab:red")
     ax2.tick_params(axis="y", labelcolor="tab:red")
+    ax2.legend(loc="lower right")
 
     ax1.plot(alphas_deg, C_Ls, color="tab:blue", label="C_L")
     ax1.set_xlabel("Alpha (degrees)")
     ax1.set_ylabel("C_L", color="tab:blue")
     ax1.tick_params(axis="y", labelcolor="tab:blue")
+    ax1.legend(loc="upper left")
 
     plt.title("C_L and C_D_i vs Alpha")
     plt.show()
