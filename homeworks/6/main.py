@@ -184,10 +184,6 @@ def render_coefficients(C_Ls, C_D_is):
 
 
 def render_Gammas():
-    print(Gamma_cache)
-    alphas_deg = np.linspace(
-        gamma_plot_alpha_0_deg, gamma_plot_alpha_1_deg, gamma_plot_d_alpha_deg
-    )
     zs = [z(i) for i in range(1, N + 1)]
 
     _, ax = plt.subplots()
