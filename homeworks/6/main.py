@@ -3,27 +3,35 @@
 
 import math
 import numpy
+import os
 import pint
 
 ur = pint.UnitRegistry()
 
-airfoil = numpy.loadtxt("homeworks/6/airfoil.dat")
+"""
+got sick of jumping between workspaces so now just place airfoil.dat adjacent
+to this script :)
+"""
+airfoil = numpy.loadtxt(
+    os.path.join(os.path.dirname(os.path.realpath(__file__)), "airfoil.dat")
+)
 
 
-# alpha in deg
-def c_l(alpha):
+def c_l(_alpha):
+    alpha = _alpha.to(ur.deg).magnitude
+
     for i in range(len(airfoil) - 1):
         if airfoil[i][0] <= alpha <= airfoil[i + 1][0]:
-            # Linear interpolation formula
             x0, y0 = airfoil[i]
             x1, y1 = airfoil[i + 1]
             return y0 + (alpha - x0) * (y1 - y0) / (x1 - x0)
+
     return None
 
 
-N = 10
-M = int(1e3)
-beta = 1e-2
+N = 10  # sections
+M = int(1e3)  # iterations
+beta = 1e-2  # damping
 
 V_infinity = 65 * ur.m / ur.s
 
@@ -56,20 +64,21 @@ alpha_1 = 17 * ur.deg
 
 delta_z = b / N
 
-c_l_z_0 = c_l(i(0))  # c_l of the incidence angle at z = 0
+c_l_z_0 = c_l(i(0) * ur.rad)  # c_l of the incidence angle at z = 0
 Gamma_0 = (V_infinity * c_r * c_l_z_0) / 2
 
 
+# i just love the word ephemeral; here, it means initial
 def Gamma_ephemeral(i):
     z_i = -b / 2 + delta_z / 2 + (i - 1) * delta_z
     return Gamma_0 * (1 - (z_i / (b / 2)) ** 2) ** (1 / 2)
 
 
+Gammas = [Gamma_ephemeral(i) for i in range(1, N + 1)]
+
+
 def D(x):
     return 4 / (1 - 4 * x**2)
-
-
-Gammas = [Gamma_ephemeral(i) for i in range(1, N + 1)]
 
 
 # 0 for testing
@@ -88,7 +97,7 @@ def iterate():
         z_i = -b / 2 + (i - 0.5) * delta_z
         c_i = c(z_i)
 
-        C_l_i = c_l((alpha_eff_i * ur.rad).to(ur.deg).magnitude)
+        C_l_i = c_l(alpha_eff_i * ur.rad)
 
         Gamma_new_i = V_infinity * c_i * C_l_i
         Gamma_old_i = Gammas[i - 1]
@@ -99,14 +108,13 @@ def iterate():
     return Gammas_new
 
 
+print("ephemeral values:")
 for Gamma in Gammas:
     print(Gamma)
 
 for i in range(M):
     Gammas = iterate()
 
-print("######")
-print("######")
-
+print("converged values:")
 for Gamma in Gammas:
     print(Gamma)
