@@ -7,6 +7,7 @@ import os
 import matplotlib.pyplot as plt
 import concurrent.futures
 from scipy.interpolate import interp1d
+from tabulate import tabulate
 
 N = 150  # sections
 epsilon = 1e-8  # threshold
@@ -28,6 +29,11 @@ alphas_deg = np.linspace(
     alpha_0_deg, alpha_1_deg, int((alpha_1_deg - alpha_0_deg) / d_alpha_deg) + 1
 )
 alphas = np.deg2rad(alphas_deg)
+
+alpha_linear_0_deg = -8
+alpha_linear_1_deg = 8
+alpha_linear_0 = alpha_linear_0_deg * math.pi / 180
+alpha_linear_1 = alpha_linear_1_deg * math.pi / 180
 
 # incidence angles at root and tip
 i_r = 1.5 * math.pi / 180
@@ -149,13 +155,27 @@ def main():
     C_D_is = []
 
     # I threaded this because I am kinda tired of watching paint dry
-    print(f"Spawning {os.cpu_count()} asynchronous compute threads...")
+    print(f"🔵 Spawning {os.cpu_count()} asynchronous compute threads...")
     with concurrent.futures.ProcessPoolExecutor() as executor:
         results = executor.map(converge, alphas)
 
     for C_L, C_D_i in results:
         C_Ls.append(C_L)
         C_D_is.append(C_D_i)
+
+    c_l_0 = c_l(alpha_linear_0)
+    c_l_1 = c_l(alpha_linear_1)
+    C_L_0 = C_Ls[np.where(alpha_linear_0_deg == alphas_deg)[0][0]]
+    C_L_1 = C_Ls[np.where(alpha_linear_1_deg == alphas_deg)[0][0]]
+
+    a_0 = (c_l_1 - c_l_0) / (alpha_linear_1 - alpha_linear_0)
+    a = (C_L_1 - C_L_0) / (alpha_linear_1 - alpha_linear_0)
+
+    print(
+        tabulate(
+            [["a_0 (airfoil slope)", a_0], ["a (3D wing slope)", a]],
+        )
+    )
 
     _, ax1 = plt.subplots()
 
