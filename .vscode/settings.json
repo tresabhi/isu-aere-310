@@ -6,8 +6,12 @@
     "Gebra",
     "infty",
     "irrotational",
+    "labelcolor",
+    "linestyle",
     "mathbb",
     "summands",
-    "Superpositioning"
+    "Superpositioning",
+    "xlabel",
+    "ylabel"
   ]
 }
