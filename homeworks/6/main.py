@@ -242,6 +242,7 @@ def render_coefficients():
     ax1.tick_params(axis="y", labelcolor="tab:blue")
     ax1.legend(loc="upper left")
 
+    ax1.grid()
     plt.title(r"$C_L$ and $C_{D_i}$ vs $\alpha$")
     plt.show(block=False)
 
@@ -256,6 +257,7 @@ def render_Gammas():
         Gammas = Gamma_cache[alpha_deg] / Gamma_0
         ax.plot(zs, Gammas, label=f"{alpha_deg}°")
 
+    plt.grid()
     plt.title(r"$\Gamma$ vs z")
     plt.xlabel("z (m)")
     plt.ylabel(r"$\Gamma / \Gamma_0$")

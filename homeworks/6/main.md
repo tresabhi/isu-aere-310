@@ -4,7 +4,7 @@ Abhigyaan Deep
 
 ## Coefficients Plot
 
-![](https://i.imgur.com/P4Ns2Cz.png)
+![](https://i.imgur.com/Lmg3ndS.png)
 
 ## Slope Estimations
 
@@ -20,7 +20,7 @@ As expected, due to the 3D relieving effect, the slope of the airfoil is greater
 
 ## Gammas Plot
 
-![](https://i.imgur.com/RIfoPNb.png)
+![](https://i.imgur.com/8TIVrXE.png)
 
 ## Source Code
 
@@ -269,6 +269,7 @@ def render_coefficients():
     ax1.tick_params(axis="y", labelcolor="tab:blue")
     ax1.legend(loc="upper left")
 
+    ax1.grid()
     plt.title(r"$C_L$ and $C_{D_i}$ vs $\alpha$")
     plt.show(block=False)
 
@@ -283,6 +284,7 @@ def render_Gammas():
         Gammas = Gamma_cache[alpha_deg] / Gamma_0
         ax.plot(zs, Gammas, label=f"{alpha_deg}°")
 
+    plt.grid()
     plt.title(r"$\Gamma$ vs z")
     plt.xlabel("z (m)")
     plt.ylabel(r"$\Gamma / \Gamma_0$")
