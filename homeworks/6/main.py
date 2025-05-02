@@ -216,7 +216,11 @@ def render_coefficients():
 
     print(
         tabulate(
-            [["a_0 (airfoil slope)", a_0], ["a (3D wing slope)", a]],
+            [
+                ["a_0 (airfoil slope)", a_0],
+                ["a (3D wing slope)", a],
+                ["Comment", "As expected, a < a_0 due to the 3D relieving effect"],
+            ],
         )
     )
 
@@ -256,7 +260,7 @@ def render_Gammas():
         Gammas = Gamma_cache[alpha_deg] / Gamma_0
         ax.plot(zs, Gammas, label=f"{alpha_deg}°")
 
-    plt.title("Gamma vs z")
+    plt.title(r"\Gamma vs z")
     plt.xlabel("z (m)")
     plt.ylabel(r"$\Gamma / \Gamma_0$")
     plt.show()
