@@ -1,4 +1,31 @@
 # AERE 310 HW 6
+
+Abhigyaan Deep
+
+## Coefficients Plot
+
+![](https://i.imgur.com/P4Ns2Cz.png)
+
+## Slope Estimations
+
+$$
+a_0 = 6.38908 \quad~~ \text{(airfoil slope)}
+$$
+
+$$
+a = 4.993 \qquad \text{(3D wing slope)}
+$$
+
+As expected, due to the 3D relieving effect, the slope of the airfoil is greater than the slope of the 3D wing since particles have 1 less degree of freedom in 2D.
+
+## Gammas Plot
+
+![](https://i.imgur.com/RIfoPNb.png)
+
+## Source Code
+
+```py
+# AERE 310 HW 6
 # Abhigyaan Deep
 
 import math
@@ -272,3 +299,88 @@ def main():
 # worker thread weeps if i don't differentiate between them and main
 if __name__ == "__main__":
     main()
+```
+
+## Output
+
+```
+🔵 Spawning 16 asynchronous compute threads for 37 Gammas...
+🟡 Received request for alpha = 0°
+🟡 Received request for alpha = 1°
+🟡 Received request for alpha = 2°
+🟡 Received request for alpha = 3°
+🟡 Received request for alpha = 4°
+🟡 Received request for alpha = 5°
+🟡 Received request for alpha = 6°
+🟡 Received request for alpha = 7°
+🟡 Received request for alpha = 8°
+🟡 Received request for alpha = 9°
+🟡 Received request for alpha = 10°
+🟡 Received request for alpha = 11°
+🟡 Received request for alpha = 12°
+🟡 Received request for alpha = 13°
+🟡 Received request for alpha = 14°
+🟡 Received request for alpha = 15°
+🟢 Converged alpha = 2° in 316 iterations
+🟡 Received request for alpha = 16°
+🟢 Converged alpha = 3° in 583 iterations
+🟡 Received request for alpha = 17°
+🟢 Converged alpha = 1° in 706 iterations
+🟡 Received request for alpha = 20°
+🟢 Converged alpha = 4° in 675 iterations
+🟡 Received request for alpha = -20°
+🟢 Converged alpha = 5° in 757 iterations
+🟡 Received request for alpha = -17°
+🟢 Converged alpha = 6° in 807 iterations
+🟡 Received request for alpha = -16°
+🟢 Converged alpha = 7° in 813 iterations
+🟡 Received request for alpha = -15°
+🟢 Converged alpha = 9° in 848 iterations
+🟡 Received request for alpha = -14°
+🟢 Converged alpha = 10° in 859 iterations
+🟡 Received request for alpha = -13°
+🟢 Converged alpha = 8° in 824 iterations
+🟡 Received request for alpha = -12°
+🟢 Converged alpha = 11° in 867 iterations
+🟡 Received request for alpha = -11°
+🟢 Converged alpha = 13° in 884 iterations
+🟡 Received request for alpha = -10°
+🟢 Converged alpha = 14° in 896 iterations
+🟡 Received request for alpha = -9°
+🟢 Converged alpha = 12° in 878 iterations
+🟡 Received request for alpha = -8°
+🟢 Converged alpha = 15° in 911 iterations
+🟡 Received request for alpha = -7°
+🟢 Converged alpha = 0° in 1069 iterations
+🟡 Received request for alpha = -6°
+🟢 Converged alpha = 16° in 923 iterations
+🟡 Received request for alpha = -5°
+🟢 Converged alpha = 17° in 951 iterations
+🟡 Received request for alpha = -4°
+🟢 Converged alpha = 20° in 1026 iterations
+🟡 Received request for alpha = -3°
+🟢 Converged alpha = -20° in 1064 iterations
+🟡 Received request for alpha = -2°
+🟢 Converged alpha = -17° in 1084 iterations
+🟡 Received request for alpha = -1°
+🟢 Converged alpha = -16° in 1026 iterations
+🟢 Converged alpha = -15° in 1022 iterations
+🟢 Converged alpha = -11° in 1007 iterations
+🟢 Converged alpha = -13° in 1028 iterations
+🟢 Converged alpha = -12° in 1008 iterations
+🟢 Converged alpha = -14° in 1039 iterations
+🟢 Converged alpha = -10° in 1029 iterations
+🟢 Converged alpha = -9° in 1059 iterations
+🟢 Converged alpha = -8° in 1065 iterations
+🟢 Converged alpha = -7° in 1049 iterations
+🟢 Converged alpha = -6° in 1068 iterations
+🟢 Converged alpha = -5° in 1136 iterations
+🟢 Converged alpha = -4° in 1183 iterations
+🟢 Converged alpha = -3° in 1221 iterations
+🟢 Converged alpha = -1° in 1795 iterations
+🟢 Converged alpha = -2° in 1990 iterations
+-------------------  -------
+a_0 (airfoil slope)  6.38908
+a (3D wing slope)    4.993
+-------------------  -------
+```
