@@ -10,7 +10,7 @@ from scipy.interpolate import interp1d
 from tabulate import tabulate
 
 # compute constants
-N = 10  # segments
+N = 150  # segments
 epsilon = 1e-8  # threshold
 beta = 10**-2.5  # damping
 
