@@ -122,10 +122,10 @@ def Gamma_ephemeral(i):
 # work is wasted
 def cache_Gammas():
     alphas_deg = list(set([*coefficients_plot_alphas_deg, *gamma_plot_alphas_deg]))
+    cpu = os.cpu_count()
+    length = len(alphas_deg)
 
-    print(
-        f"🔵 Spawning {os.cpu_count()} asynchronous compute threads for {len(alphas_deg)} Gammas..."
-    )
+    print(f"🔵 Spawning {cpu} asynchronous compute threads for {length} Gammas...")
     with concurrent.futures.ProcessPoolExecutor() as executor:
         Gammas_array = executor.map(converge_Gammas, alphas_deg)
 
@@ -160,7 +160,7 @@ def converge_Gammas(alpha_deg):
     alpha = alpha_deg * math.pi / 180
     Gammas = [Gamma_ephemeral(i) for i in range(1, N + 1)]
     converged = False
-    iteration = 0
+    I = 0
 
     while not converged:
         Gammas_new = iterate(Gammas, alpha)
@@ -175,11 +175,9 @@ def converge_Gammas(alpha_deg):
 
         converged = epsilon_i < epsilon
         Gammas = Gammas_new
-        iteration += 1
+        I += 1
 
-    print(
-        f"🟢 Converged alpha = {round(alpha * 180 / math.pi)}° in {iteration} iterations"
-    )
+    print(f"🟢 Converged alpha = {round(alpha * 180 / math.pi)}° in {I} iterations")
 
     return Gammas
 
